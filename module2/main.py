@@ -1,9 +1,7 @@
-from skimage import data, filters
+from skimage import data, filters, feature
 import matplotlib.pyplot as plt
 import numpy as np
-import scipy
-from scipy import ndimage
-from scipy import misc
+import scipy.ndimage
 
 # Load the image
 image = data.camera()
@@ -40,10 +38,6 @@ kernel4 = np.array([[0, 1, 0],
                     [1, -4, 1],
                     [0, 1, 0]]) # Laplacian up and down added in one
 
-kernel5 = np.array([[0.5, 2, 2.5],
-                    [-2, 2, 2],
-                    [-2.5, -2, -2.5]]) # kernel 1 and 1_2 added + 0.5 for diagonals
-
 # Apply convolution filters step by step
 new_image1 = filters.gaussian(image)
 
@@ -64,9 +58,6 @@ new_image3 = scipy.ndimage.convolve(new_image3, kernel3)
 
 new_image4 = scipy.ndimage.convolve(image, blur)
 new_image4 = scipy.ndimage.convolve(new_image4, kernel4)
-
-new_image5 = scipy.ndimage.convolve(image, blur)
-new_image5 = scipy.ndimage.convolve(new_image5, kernel5)
 
 # Display the filtered images
 plt.subplot(3, 3, 2)
@@ -89,29 +80,30 @@ plt.imshow(new_image4 + 127, cmap='gray')
 plt.title('Laplacian Added Hor and Ver')
 plt.axis('off')
 
-plt.subplot(3, 3, 4)
-plt.imshow(new_image5 + 127, cmap='gray')
-plt.title('Garbage')
-plt.axis('off')
-
 # Adding more edge detection functions
-new_image6 = filters.prewitt(image)
-new_image7 = filters.sobel(image)
-new_image8 = filters.roberts(image)
+new_image5 = filters.prewitt(image)
+new_image6 = filters.sobel(image)
+new_image7 = filters.roberts(image)
+new_image8 = feature.canny(image, sigma=2)
 
 plt.subplot(3, 3, 7)
-plt.imshow(new_image6, cmap='gray')
+plt.imshow(new_image5, cmap='gray')
 plt.title('Prewitt Edge Detection')
 plt.axis('off')
 
 plt.subplot(3, 3, 8)
-plt.imshow(new_image7, cmap='gray')
+plt.imshow(new_image6, cmap='gray')
 plt.title('Sobel Edge Detection')
 plt.axis('off')
 
 plt.subplot(3, 3, 9)
-plt.imshow(new_image8, cmap='gray')
+plt.imshow(new_image7, cmap='gray')
 plt.title('Roberts Edge Detection')
+plt.axis('off')
+
+plt.subplot(3, 3, 4)
+plt.imshow(new_image8, cmap='gray')
+plt.title('Canny Edge Detection')
 plt.axis('off')
 
 plt.tight_layout()
